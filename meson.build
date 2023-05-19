@@ -83,6 +83,7 @@ dependency('lua-turbo')
 dependency('luajson')
 dependency('luasec')
 dependency('luasocket')
+dependency('lj-wpaclient')
 
 # }}}
 
