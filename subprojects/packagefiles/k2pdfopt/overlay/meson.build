@@ -87,9 +87,6 @@ foreach _prefix, _files : {
     'userinput.c',
     'wrapbmp.c',
   ],
-  'leptonica_mod': [
-    'dewarp2.c',
-  ],
   'tesseract_mod': [
     'tesscapi.cpp',
   ],
@@ -146,7 +143,6 @@ k2pdfopt_lib = library(
   dependencies: dependencies,
   gnu_symbol_visibility: 'inlineshidden',
   include_directories: include_directories(
-    'include_mod',
     'k2pdfoptlib',
     'willuslib',
   ),
@@ -158,7 +154,6 @@ k2pdfopt_dep = declare_dependency(
   dependencies: [leptonica_dep.partial_dependency(includes: true)],
   include_directories: include_directories(
     '.',
-    'include_mod',
     'k2pdfoptlib',
     'willuslib',
   ),
@@ -169,15 +164,15 @@ meson.override_dependency('k2pdfopt', k2pdfopt_dep)
 
 install_headers(
   'context.h',
+  'k2pdfoptlib/k2pdfopt.h',
   'koptcrop.h',
   'koptimize.h',
   'koptocr.c',
   'koptocr.h',
   'koptreflow.h',
+  'leptonica.h',
   'setting.h',
-  'include_mod/leptonica.h',
-  'include_mod/tesseract.h',
-  'k2pdfoptlib/k2pdfopt.h',
+  'tesseract.h',
   'willuslib/willus.h',
   subdir: 'k2pdfopt',
 )

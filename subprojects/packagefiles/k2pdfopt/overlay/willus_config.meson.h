@@ -17,4 +17,6 @@
 #define K2PDFOPT_EXPORT
 #endif
 
+#define K2PDFOPT_KINDLEPDFVIEWER
+
 #endif

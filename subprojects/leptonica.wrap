@@ -4,6 +4,7 @@ revision = 1.74.1
 depth = 1
 patch_directory = leptonica/overlay
 diff_files = 
+	leptonica/k2pdfopt.patch,
 	leptonica/visibility.patch,
 	leptonica/fix-uninitialized-memory-access.patch
 

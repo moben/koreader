@@ -1,8 +1,8 @@
 diff --git a/willuslib/willus.h b/willuslib/willus.h
-index d57d011f..4023e05b 100644
+index e9f56c49..0c4ae1e9 100644
 --- a/willuslib/willus.h
 +++ b/willuslib/willus.h
-@@ -236,6 +236,7 @@ typedef double  real;
+@@ -223,6 +223,7 @@ typedef double  real;
  **
  */
  
@@ -10,7 +10,7 @@ index d57d011f..4023e05b 100644
  /*
  ** CMAKE handles the defines, not this source
  ** (Mod from Dirk Thierbach, 31-Dec-2013)
-@@ -296,6 +297,9 @@ typedef double  real;
+@@ -282,6 +283,9 @@ typedef double  real;
  #endif
  
  #endif /* USE_CMAKE */

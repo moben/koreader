@@ -67,7 +67,7 @@ trim-thirdparty:
 	rm -vrf subprojects/libarchive-*/{build/autoconf,contrib,doc,examples,libarchive/test,Makefile.in,test_utils}
 	rm -vrf subprojects/libffi-*/{doc,testsuite}
 	rm -vrf subprojects/libjpeg-turbo-*/{cmakescripts,doc,fuzz,java,release,testimages}
-	rm -vrf subprojects/libk2pdfopt/kindlepdfviewer
+	rm -vrf subprojects/k2pdfopt_*/{include_mod,kindlepdfviewer}
 	rm -vrf subprojects/libpng-*/{contrib,libpng.3,libpng-manual.txt,projects,scripts/makefile*}
 	rm -vrf subprojects/libwebp/{doc,examples,extras,gradle,imageio,infra,man,swig,tests,webp_js}
 	rm -vrf subprojects/libzmq/{builds/msvc,foreign,doc,tests}

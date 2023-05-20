@@ -4,4 +4,5 @@ revision = 3.05.00
 depth = 1
 patch_directory = tesseract/overlay
 diff_files = 
+	tesseract/k2pdfopt.patch,
 	tesseract/reduce-size.patch
