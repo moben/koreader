@@ -1,8 +1,8 @@
 diff --git a/include/mupdf/fitz/compressed-buffer.h b/include/mupdf/fitz/compressed-buffer.h
-index 852648c6..22eb22dd 100644
+index b509ac6b..7902715f 100644
 --- a/include/mupdf/fitz/compressed-buffer.h
 +++ b/include/mupdf/fitz/compressed-buffer.h
-@@ -146,6 +146,7 @@ enum
+@@ -159,6 +159,7 @@ enum
  	FZ_IMAGE_PNG,
  	FZ_IMAGE_PNM,
  	FZ_IMAGE_TIFF,
@@ -42,7 +42,7 @@ index 14009239..1f1c5b8a 100644
  
  #endif
 diff --git a/source/fitz/image.c b/source/fitz/image.c
-index 9668b71a..47854c16 100644
+index 07f7608b..da8f16ef 100644
 --- a/source/fitz/image.c
 +++ b/source/fitz/image.c
 @@ -745,6 +745,9 @@ compressed_image_get_pixmap(fz_context *ctx, fz_image *image_, fz_irect *subarea
@@ -55,7 +55,7 @@ index 9668b71a..47854c16 100644
  	case FZ_IMAGE_TIFF:
  		tile = fz_load_tiff(ctx, image->buffer->buffer->data, image->buffer->buffer->len);
  		break;
-@@ -1237,6 +1240,9 @@ fz_recognize_image_format(fz_context *ctx, unsigned char p[8])
+@@ -1272,6 +1275,9 @@ fz_recognize_image_format(fz_context *ctx, unsigned char p[8])
  	if (p[0] == 0x97 && p[1] == 'J' && p[2] == 'B' && p[3] == '2' &&
  		p[4] == '\r' && p[5] == '\n'  && p[6] == 0x1a && p[7] == '\n')
  		return FZ_IMAGE_JBIG2;
@@ -65,7 +65,7 @@ index 9668b71a..47854c16 100644
  	return FZ_IMAGE_UNKNOWN;
  }
  
-@@ -1288,6 +1294,9 @@ fz_new_image_from_buffer(fz_context *ctx, fz_buffer *buffer)
+@@ -1323,6 +1329,9 @@ fz_new_image_from_buffer(fz_context *ctx, fz_buffer *buffer)
  		fz_load_jbig2_info(ctx, buf, len, &w, &h, &xres, &yres, &cspace);
  		bpc = 1;
  		break;

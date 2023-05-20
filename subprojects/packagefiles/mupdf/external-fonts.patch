@@ -1,9 +1,9 @@
 diff --git a/include/mupdf/fitz/font.h b/include/mupdf/fitz/font.h
-index fac4fb60..160e4bb5 100644
+index bec66024..0b6d4b9e 100644
 --- a/include/mupdf/fitz/font.h
 +++ b/include/mupdf/fitz/font.h
-@@ -726,4 +726,9 @@ struct fz_font
- 	unsigned char digest[16];
+@@ -742,4 +742,9 @@ struct fz_font
+ 	int subfont;
  };
  
 +char *get_font_file(char *name);
@@ -13,10 +13,10 @@ index fac4fb60..160e4bb5 100644
 +
  #endif
 diff --git a/source/fitz/font.c b/source/fitz/font.c
-index e0c6a833..883ddfb3 100644
+index 66fb4e2a..e3401c65 100644
 --- a/source/fitz/font.c
 +++ b/source/fitz/font.c
-@@ -472,11 +472,8 @@ fz_font *fz_load_system_fallback_font(fz_context *ctx, int script, int language,
+@@ -476,11 +476,8 @@ fz_font *fz_load_system_fallback_font(fz_context *ctx, int script, int language,
  fz_font *fz_load_fallback_font(fz_context *ctx, int script, int language, int serif, int bold, int italic)
  {
  	fz_font **fontp;
@@ -28,7 +28,7 @@ index e0c6a833..883ddfb3 100644
  
  	if (script < 0 || script >= (int)nelem(ctx->font->fallback))
  		return NULL;
-@@ -510,9 +507,18 @@ fz_font *fz_load_fallback_font(fz_context *ctx, int script, int language, int se
+@@ -514,6 +511,10 @@ fz_font *fz_load_fallback_font(fz_context *ctx, int script, int language, int se
  		*fontp = fz_load_system_fallback_font(ctx, script, language, serif, bold, italic);
  		if (!*fontp)
  		{
@@ -38,7 +38,11 @@ index e0c6a833..883ddfb3 100644
 +			int size;
  			data = fz_lookup_noto_font(ctx, script, language, &size, &subfont);
  			if (data)
- 				*fontp = fz_new_font_from_memory(ctx, NULL, data, size, subfont, 0);
+ 			{
+@@ -521,6 +522,11 @@ fz_font *fz_load_fallback_font(fz_context *ctx, int script, int language, int se
+ 				/* Noto fonts can be embedded. */
+ 				fz_set_font_embedding(ctx, *fontp, 1);
+ 			}
 +#else
 +			char *filename = get_font_file("freefont/FreeSerif.ttf");
 +			*fontp = fz_new_font_from_file(ctx, NULL, filename, 0, 1);
@@ -342,7 +346,7 @@ index d1fe4ea2..6afb7fff 100644
  
  	return NULL;
 diff --git a/source/pdf/pdf-font.c b/source/pdf/pdf-font.c
-index 697414b2..f25c7988 100644
+index 6322cedf..af1006ab 100644
 --- a/source/pdf/pdf-font.c
 +++ b/source/pdf/pdf-font.c
 @@ -93,6 +93,8 @@ static const char *base_font_names[][10] =
