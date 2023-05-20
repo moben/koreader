@@ -115,9 +115,9 @@ local function collectFaceInfo(path)
         end
 
         -- If family_name is missing, it's probably too broken to be useful
-        if face.family_name ~= nil then
+        if face.face.family_name ~= nil then
             local fres = face:getInfo()
-            local hbface = HB.hb_ft_face_create_referenced(face)
+            local hbface = HB.hb_ft_face_create_referenced(face.face)
             fres.names = hbface:getNames()
             fres.scripts, fres.langs = hbface:getCoverage()
             fres.path = path
