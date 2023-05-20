@@ -76,13 +76,13 @@ zstd_dep = dependency('libzstd')
 # LUA.
 dependency('koreader-lfs')
 dependency('lua-htmlparser')
+dependency('lua-ljsqlite3')
 dependency('lua-rapidjson')
 dependency('lua-spore')
 dependency('lua-turbo')
 dependency('luajson')
 dependency('luasec')
 dependency('luasocket')
-subdir('base/thirdparty/lua-ljsqlite3')
 
 # }}}
 
