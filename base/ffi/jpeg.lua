@@ -13,14 +13,7 @@ local BB = require("ffi/blitbuffer")
 require("ffi/posix_h")
 require("ffi/turbojpeg_h")
 
-local turbojpeg
-if ffi.os == "Windows" then
-    turbojpeg = ffi.load("libs/libturbojpeg.dll")
-elseif ffi.os == "OSX" then
-    turbojpeg = ffi.load("libs/libturbojpeg.dylib")
-else
-    turbojpeg = ffi.load("libs/libturbojpeg.so")
-end
+local turbojpeg = ffi.loadlib("turbojpeg")
 
 local Jpeg = {}
 

@@ -20,13 +20,12 @@ require("ffi/linux_input_h")
 
 -----------------------------------------------------------------
 
-local SDL = util.ffiLoadCandidates{
-    "SDL2",
-    -- this unfortunately needs to be written in full due to the . in the name
-    "libSDL2-2.0.so",
-    "libSDL2-2.0.so.0",
-    util.KO_DYLD_PREFIX .. "/lib/libSDL2.dylib",
-}
+local SDL = ffi.loadlib(
+    "SDL2-2.0", 0,
+    "SDL2-2.0", nil,
+    "SDL2", nil,
+    "sdl2", nil
+    )
 
 -- Some features (like SDL_GameControllerRumble) may require a minimum version
 -- of SDL. These helper functions allow us to prevent any issues with calling
