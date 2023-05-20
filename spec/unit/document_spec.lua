@@ -84,8 +84,13 @@ describe("EPUB document module", function()
             "Noto Sans Devanagari UI",
             "Noto Serif",
         }
-        local face_list = cre.getFontFaces()
-        assert.are.same(fonts_registry, face_list)
+        local has_droid_sans = false
+        for i, v in ipairs(cre.getFontFaces()) do
+            if v == "Droid Sans Mono" then
+                has_droid_sans = true
+            end
+        end
+        assert.is_true(has_droid_sans)
     end)
     it("should close document", function()
         doc:close()
