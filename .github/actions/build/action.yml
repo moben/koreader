@@ -1,0 +1,170 @@
+inputs:
+
+  name:
+    required: true
+
+  extra_packages:
+    default: ''
+
+  extra_setup:
+    default: ''
+
+  target:
+    required: true
+
+  cache_extra_key:
+    default: ''
+
+  target_options:
+    default: ''
+
+  update_target:
+    default: ''
+
+  update_artifacts:
+    default: ''
+
+  tests:
+    default: false
+
+  # Internal.
+
+  cache_epoch:
+    default: '3' # increment to reset all caches
+
+  ccache_version:
+    default: '4.8'
+
+  python_version:
+    default: '3'
+
+  subprojects_cache_paths:
+    default: |
+      subprojects/*
+      !subprojects/crengine
+      !subprojects/koreader-runtests
+      !subprojects/lua-ljsqlite3
+      !subprojects/packagecache
+      !subprojects/packagefiles
+
+  build_cache_paths:
+    default: |
+      koreader-*/koreader/
+
+  shell:
+    default: bash --noprofile --norc -eo pipefail kodev ci shell . {0}
+
+runs:
+
+  using: "composite"
+
+  steps:
+
+    - shell: ${{ inputs.shell }}
+      run: |
+        cat >${{ format('meson/user_{0}-release.ini', inputs.target) }} <<\EOF
+        [project options]
+        b_thinlto_cache = false
+        tests = ${{ inputs.tests }}
+        ${{ inputs.target_options }}
+        EOF
+
+    - shell: ${{ inputs.shell }}
+      run: >
+        kodev-ci-setup-cache-key
+        '${{ inputs.cache_epoch }}'
+        '${{ inputs.target }}'
+        '${{ inputs.tests == 'true' && 'tests' || '' }}'
+        '${{ inputs.cache_extra_key }}'
+
+    - uses: actions/cache/restore@v3
+      id: build-cache
+      with:
+        path: ${{ inputs.build_cache_paths }}
+        key: ${{ env.CACHE_KEY_PREFIX }}${{ env.CACHE_KEY_SUFFIX }}-build-${{ env.CACHE_KEY_HASH }}
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python_version }}
+
+    - shell: ${{ inputs.shell }}
+      run: |
+        building='${{ steps.build-cache.outputs.cache-hit == 'true' && 'false' || 'true' }}'
+        kodev-ci-setup '${{ inputs.target }}' "$building" ${{ inputs.extra_packages }}
+        [[ "$building" = 'true' ]] || exit 0
+        ${{ inputs.extra_setup }}
+
+    - uses: actions/cache/restore@v3
+      id: subprojects-cache
+      with:
+        path: ${{ inputs.subprojects_cache_paths }}
+        key: ${{ inputs.cache_epoch }}-subprojects-${{ hashFiles('make/emulator.mk', 'subprojects/*.wrap', 'subprojects/packagefiles/**') }}
+
+    - shell: ${{ inputs.shell }}
+      run: kodev-ci-fetch-thirdparty
+
+    - uses: actions/cache/save@v3
+      if: steps.subprojects-cache.outputs.cache-hit != 'true'
+      with:
+        path: ${{ inputs.subprojects_cache_paths }}
+        key: ${{ steps.subprojects-cache.outputs.cache-primary-key }}
+
+    - shell: ${{ inputs.shell }}
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: kodev-ci-ccache-setup '${{ inputs.ccache_version }}'
+
+    - uses: actions/cache/restore@v3
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      id: ccache-cache
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ${{ env.CACHE_KEY_PREFIX }}-ccache-${{ inputs.ccache_version }}-${{ env.CACHE_KEY_HASH }}${{ env.CACHE_KEY_SUFFIX }}
+        restore-keys: ${{ env.CACHE_KEY_PREFIX }}-ccache-${{ inputs.ccache_version }}-
+
+    - shell: ${{ inputs.shell }}
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: kodev-ci-ccache-post-restore
+
+    - shell: ${{ inputs.shell }}
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: kodev-ci-build '${{ inputs.target }}'
+
+    - uses: actions/cache/save@v3
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      with:
+        path: ${{ inputs.build_cache_paths }}
+        key: ${{ steps.build-cache.outputs.cache-primary-key }}
+
+    - shell: ${{ inputs.shell }}
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: kodev-ci-ccache-pre-save
+
+    - uses: actions/cache/save@v3
+      if: steps.build-cache.outputs.cache-hit != 'true' && steps.ccache-cache.outputs.cache-hit != 'true'
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ${{ steps.ccache-cache.outputs.cache-primary-key }}
+
+    - shell: ${{ inputs.shell }}
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: kodev-ci-ccache-teardown
+
+    - shell: ${{ inputs.shell }}
+      if: inputs.tests == 'true'
+      run: kodev-ci-test
+
+    - uses: actions/upload-artifact@v3
+      if: always() && env.UPLOAD_COREDUMPS
+      with:
+        name: Tests coredumps (${{ inputs.name }})
+        path: coredumps.tar.zst
+
+    - shell: ${{ inputs.shell }}
+      if: inputs.update_target != ''
+      run: kodev-ci-release '${{ inputs.update_target }}'
+
+    - uses: actions/upload-artifact@v3
+      if: inputs.update_target != '' && inputs.update_artifacts != ''
+      with:
+        name: KOReader ${{ inputs.name }}
+        path: ${{ inputs.update_artifacts }}

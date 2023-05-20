@@ -20,7 +20,7 @@ function info() {
         color="ANSI_${1#-c}"
         shift
     fi
-    if [[ -t 2 ]]; then
+    if [[ -t 2 || "${CI}" = 'true' ]]; then
         echo "${!color}$*${ANSI_RESET}" 1>&2
     else
         echo "$*" 1>&2
@@ -53,17 +53,44 @@ function print_quoted() {
     fi
 }
 
+if [[ "${CI}" = 'true' ]]; then
+    function faketty() {
+        "$@"
+    }
+    if [[ ${OSTYPE} == darwin* ]] && which unbuffer &>/dev/null; then
+        function faketty() {
+            env TERM='xterm-256color' unbuffer "$@"
+        }
+    fi
+    if [[ ${OSTYPE} == linux* ]] && which script &>/dev/null; then
+        function faketty() {
+            env TERM='xterm-256color' script /dev/null --quiet --return --command "$(print_quoted "$@")"
+        }
+    fi
+fi
+
 function run() {
+    if [[ ${opt_dry_run} -eq 0 && "${CI}" = 'true' ]]; then
+        echo -n '::group::' 1>&2
+    fi
     info "$(print_quoted "$@")"
     if [[ ${opt_dry_run} -ne 0 ]]; then
         return
     fi
     local cmd=("$@")
+    if [[ "${CI}" == 'true' ]]; then
+        # For color output…
+        cmd=(faketty "${cmd[@]}")
+    fi
     local code=0
     if [[ ${opt_timings} -ne 0 ]]; then
         time "${cmd[@]}" || code=$?
     else
         "${cmd[@]}" || code=$?
+    fi
+    if [ "${CI}" = 'true' ]; then
+        info -cDIM "$(print_quoted "$@")"
+        echo '::endgroup::' 1>&2
     fi
     return ${code}
 }
@@ -87,11 +114,17 @@ function setenv() {
     info "export $(print_quoted "$@")"
     # shellcheck disable=SC2163
     export "$@"
+    if [[ "${CI}" == 'true' && -n "${GITHUB_ENV}" ]]; then
+        printf '%s\n' "$@" >>"${GITHUB_ENV}"
+    fi
 }
 
 function addpath() {
     info "export PATH=$(print_quoted "$1"):\"\$PATH\""
     export PATH="$1:${PATH}"
+    if [[ "${CI}" == 'true' && -n "${GITHUB_PATH}" ]]; then
+        printf '%s\n' "$1" >>"${GITHUB_PATH}"
+    fi
 }
 
 function download() {
@@ -808,6 +841,290 @@ TARGET:
     esac
 }
 
+function kodev-ci-fetch-thirdparty() {
+    run_make fetch-thirdparty
+    run_make trim-thirdparty
+}
+
+function kodev-ci-setup-x-tools() {
+    download "https://github.com/koreader/koxtoolchain/releases/download/2021.12/$1.zip"
+    run 7z e "$1.zip"
+    run tar xvaf "$1.tar.gz" -C ..
+    addpath "${PWD%/*}/x-tools/$2/bin"
+}
+
+function kodev-ci-setup-linux() {
+    target="$1"
+    building="$2"
+    shift 2
+    if [[ "${building}" != 'true' ]]; then
+        return
+    fi
+    packages=("$@")
+    case "${target}" in
+        android-arm)
+            packages+=(
+                gcc-multilib
+            )
+            ;;
+        emulator*)
+            packages+=(
+                libbsd0
+                libegl1-mesa-dev
+                libgl1-mesa-dev
+                libgles2-mesa-dev
+                libvulkan-dev
+                libwayland-dev
+                libx11-dev
+                libxcursor-dev
+                libxi-dev
+                libxkbcommon-dev
+                libxrandr-dev
+                nasm
+                wayland-protocols
+            )
+            ;;
+        kindlepw2)
+            packages+=(
+                gcc-multilib
+            )
+            kodev-ci-setup-x-tools kindlepw2 arm-kindlepw2-linux-gnueabi
+            ;;
+        remarkable)
+            packages+=(
+                gcc-multilib
+            )
+            kodev-ci-setup-x-tools remarkable arm-remarkable-linux-gnueabihf
+            ;;
+    esac
+    run sudo rm -f /var/lib/man-db/auto-update
+    run sudo apt -q update
+    run sudo apt -qy install "${packages[@]}"
+}
+
+function kodev-ci-setup-macos() {
+    target="$1"
+    building="$2"
+    shift 2
+    packages=(
+        expect
+        gnu-getopt
+    )
+    if [[ "${building}" == 'true' ]]; then
+        packages+=(
+            nasm
+            "$@"
+        )
+    fi
+    run env HOMEBREW_NO_INSTALL_CLEANUP=1 brew install -q "${packages[@]}"
+    addpath "$(brew --prefix)/opt/gnu-getopt/bin"
+    case "${target}" in
+        emulator-macos-arm64)
+            deployment_target='11.0'
+            ;;
+        *)
+            deployment_target='10.15'
+            ;;
+    esac
+    setenv MACOSX_DEPLOYMENT_TARGET="${deployment_target}"
+}
+
+function kodev-ci-setup() {
+    run python -m pip --disable-pip-version-check install https://github.com/benoit-pierre/meson/archive/refs/heads/pr/fix_internal_dependency_includes_in_checks.zip ninja
+    case "${RUNNER_OS}" in
+        'Linux')
+            kodev-ci-setup-linux "$@"
+            ;;
+        'macOS')
+            kodev-ci-setup-macos "$@"
+            ;;
+    esac
+}
+
+function kodev-ci-ccache-setup() {
+    local version="$1"
+    local dist_flavor
+    local dist_ext
+    local tar
+    case "${RUNNER_OS}" in
+        'Linux')
+            dist_flavor='linux-x86_64'
+            dist_ext='tar.xz'
+            tar='tar'
+            ;;
+        'macOS')
+            dist_flavor='darwin'
+            dist_ext='tar.gz'
+            tar='gtar'
+            ;;
+        *)
+            die 1 "unsupported runner OS: \"${RUNNER_OS}\""
+            ;;
+    esac
+    local dist="ccache-${version}-${dist_flavor}"
+    local tmpfs_mpoint
+    local tmpfs_size=264
+    download "https://github.com/ccache/ccache/releases/download/v${version}/${dist}.${dist_ext}"
+    run "${tar}" xvaf "${dist}.${dist_ext}" -C ..
+    case "${RUNNER_OS}" in
+        'Linux')
+            tmpfs_mpoint="/run/user/${UID}"
+            ;;
+        'macOS')
+            tmpfs_mpoint="${PWD%/*}/tmpfs"
+            run mkdir "${tmpfs_mpoint}"
+            local out
+            local dev
+            out="$(run hdiutil attach -nomount "ram://$((tmpfs_size * 1024 * 1024 / 512))")"
+            read -r dev _ <<<"${out}"
+            run sudo newfs_hfs "${dev}"
+            run sudo mount -t hfs -o rw "${dev}" "${tmpfs_mpoint}"
+            run sudo chown "$(id -un):$(id -gn)" "${tmpfs_mpoint}"
+            echo "${dev}" >"${tmpfs_mpoint}/.dev"
+            ;;
+    esac
+    # Note: use a subdirectory of the tmpfs mounpoint
+    # to avoid a permission issue on restore (sticky
+    # bit on the mountpoint directory).
+    setenv CCACHE_DIR="${tmpfs_mpoint}/ccache"
+    run mkdir -p "${CCACHE_DIR}"
+    addpath "${PWD%/*}/${dist}"
+    run ccache --show-config
+}
+
+function kodev-ci-ccache-post-restore() {
+    run ccache --zero-stats
+}
+
+function kodev-ci-ccache-pre-save() {
+    run ccache --show-stats --verbose
+    run ccache --max-size=256M
+    run ccache --cleanup >/dev/null
+    run ccache --show-stats --verbose
+}
+
+function kodev-ci-ccache-teardown() {
+    case "${RUNNER_OS}" in
+        'Linux')
+            run rm -rf "${CCACHE_DIR}"
+            ;;
+        'macOS')
+            local dev
+            read -r dev <"${CCACHE_DIR%/*}/.dev"
+            run sudo umount "${CCACHE_DIR%/*}"
+            run sudo hdiutil detach "${dev}"
+            ;;
+    esac
+}
+
+function kodev-ci-setup-cache-key() {
+    local epoch="$1"
+    local target="$2"
+    shift 2
+    run_make CCACHE=ccache TARGET="${target}" cache-key
+    run cat cache_key.txt
+    setenv CACHE_KEY_HASH="$(git hash-object cache_key.txt)"
+    local prefix suffix
+    for part in prefix suffix; do
+        local val=''
+        while [[ $# -gt 0 ]]; do
+            local tag="$1"
+            shift
+            case "${tag}" in
+                '') ;;
+                --) break ;;
+                *) val+="${val:+-}${tag}" ;;
+            esac
+        done
+        local "${part}"="${val}"
+    done
+    setenv CACHE_KEY_PREFIX="${epoch}-${target}${prefix:+-}${prefix}"
+    setenv CACHE_KEY_SUFFIX="${suffix:+-}${suffix}"
+}
+
+function kodev-ci-build() {
+    kodev-build --verbose -n "$@"
+}
+
+function kodev-ci-coredumps-handle-linux() {
+    local topdir="${PWD#/}"
+    local script="$CORESDIR/autopsy.sh"
+    local libdir="$CORESDIR/lib/x86_64-linux-gnu"
+    local kodir="${topdir}/$(echo -n koreader-*/koreader)"
+    run cd "$CORESDIR"
+    run mkdir -p "$CORESDIR/${kodir%/*}"
+    run mv "/${kodir}" "$CORESDIR/${kodir}"
+    run mkdir -p "${libdir}" $CORESDIR/usr
+    run ln -s ../lib $CORESDIR/usr
+    run cp -a /"${libdir#*/}"/{ld-*,libcrypto,libgcc_s,libssl,libstdc++}.so* "${libdir}"
+    run cp -a /"${libdir#*/}"/{libc,libdl,libm,libnss_dns,libnss_files,libpthread,libresolv,librt,libthread_db}{-*,}.so* "${libdir}"
+    find "${libdir}" -type l -printf 'l="%p" t="%l"; ln -vsnf "${t##*/}" "$l"\n' | bash -x
+    cat >"$script" <<EOF
+#!/bin/sh
+kodir='${kodir}'
+export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com"
+sosp="\$(find "\$kodir" -type f -name '*.so' -printf '%h\\n' | sort -u | xargs printf '%s:')"
+exec gdb \
+    -ex "set solib-absolute-prefix \$PWD" \\
+    -ex "set solib-search-path \${sosp%:}" \\
+    "\$kodir/luajit" \\
+    corefile-luajit-*
+EOF
+    run chmod +x "$script"
+    run tar --zstd -cvf "coredumps.tar.zst" $CORESDIR
+    setenv UPLOAD_COREDUMPS=1
+}
+
+function kodev-ci-coredumps-handle-macos() {
+    run lldb --batch --core "$CORESDIR"/core.* --one-line bt
+}
+
+function kodev-ci-coredumps-handle() {
+    [[ -n "$(find "$CORESDIR" -maxdepth 0 -empty)" ]] && return
+    err 'we have coredumps!'
+    ls -lh "$CORESDIR"
+    case "${RUNNER_OS}" in
+        'Linux')
+            kodev-ci-coredumps-handle-linux
+            ;;
+        'macOS')
+            kodev-ci-coredumps-handle-macos
+            ;;
+    esac
+}
+
+function kodev-ci-test() {
+    case "${RUNNER_OS}" in
+        'Linux')
+            setenv CORESDIR="$PWD/coredumps"
+            echo "$CORESDIR/corefile-%e-%p-%t" | sudo tee /proc/sys/kernel/core_pattern
+            mkdir -p "$CORESDIR"
+            ;;
+        'macOS')
+            setenv CORESDIR='/cores'
+            sudo chmod 1777 "$CORESDIR"
+            ;;
+    esac
+    ulimit -c unlimited
+    trap kodev-ci-coredumps-handle EXIT
+    kodev-test --verbose -n -b all "$@"
+}
+
+function kodev-ci-release() {
+    kodev-release --verbose -n -b "$@"
+}
+
+function kodev-ci-shell() {
+    "$@"
+}
+
+function kodev-ci() {
+    local fn="kodev-ci-$1"
+    [[ "$(type -t "${fn}")" = function ]] || die 1 "invalid ci command: $1"
+    shift
+    "${fn}" "$@"
+}
+
 HELP_MSG="
 usage: $0 COMMAND <ARGS>
 
@@ -831,6 +1148,14 @@ Supported commands:
     echo "${HELP_MSG}"
     exit 1
 }
+
+if [[ "$1" = 'ci' && "${CI}" = 'true' ]]; then
+    exec 2>&1 # avoid jumbled output…
+    opt_timings=1
+    shift 1
+    kodev-ci "$@"
+    exit
+fi
 
 case "${1}" in
     activate)

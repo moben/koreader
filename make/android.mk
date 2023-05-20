@@ -61,6 +61,17 @@ else ifeq (true,$(ANDROID_7Z_LZMA2))
   LJL_ASSETS_COMPRESSION = -m0=lzma2 -mx=9
 endif
 
+ifeq (true,$(CI))
+  GRADLE_FLAGS ?= \
+		  --console=plain \
+		  --no-build-cache \
+		  --no-configuration-cache \
+		  --no-daemon \
+		  -x lintVital$(ANDROID_ARCH)RocksRelease
+else
+  GRADLE_FLAGS ?=
+endif
+
 update: all update-git-rev
 	mkdir -p $(LJL_ASSETS_DIR)/module $(LJL_LIBS_DIR)/$(ANDROID_ABI)
 	# shared libraries are stored as raw assets
@@ -120,6 +131,7 @@ update: all update-git-rev
 		-PbuildDir='$(LJL_BUILD_DIR)' \
 		-PassetsPath='$(LJL_ASSETS_DIR)' \
 		-PlibsPath='$(LJL_LIBS_DIR)' \
+		$(GRADLE_FLAGS) \
 		'app:assemble$(ANDROID_ARCH)Rocks$(if $(KODEBUG),Debug,Release)'
 	cp $(ANDROID_LAUNCHER_DIR)/NativeActivity.apk $(ANDROID_APK)
 
