@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/xpol/lua-rapidjson.git
+revision = v0.7.1
+depth = 1
+patch_directory = lua-rapidjson/overlay

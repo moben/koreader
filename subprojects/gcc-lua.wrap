@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://git.colberg.org/gcc-lua
+revision = eb535dea8cb7a633664e08515202ab65a37e525f
+patch_directory = gcc-lua/overlay
+diff_files = 
+	gcc-lua/gcc-lua-support-gcc11.patch

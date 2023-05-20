@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/AppImage/cpr.git
+revision = 6d4ae7129093a47534166015a076e7bc83233677
+depth = 1
+patch_directory = cpr/overlay
+
+[provide]
+dependency_names = libcpr

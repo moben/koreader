@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/malord/miniconv.git
+revision = 170ddcb9ac8eda1e08e7426acecb6a5733cf1d36
+depth = 1
+patch_directory = miniconv/overlay
+diff_files = 
+	miniconv/miniconv-config.patch,
+	miniconv/iconv-proto-compat.patch

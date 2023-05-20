@@ -1,0 +1,12 @@
+[wrap-git]
+url = https://github.com/harfbuzz/harfbuzz.git
+revision = 5.3.1
+depth = 1
+diff_files = 
+	harfbuzz/no-subset-install.patch,
+	harfbuzz/no-need-for-ragel.patch,
+	harfbuzz/fix-install-tags.patch,
+	harfbuzz/fix-setup-warnings.patch
+
+[provide]
+harfbuzz = libharfbuzz_dep

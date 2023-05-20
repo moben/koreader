@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/roberto-ieru/LPeg.git
+revision = v1.0.2
+depth = 1
+patch_directory = lua-lpeg/overlay
+diff_files = 
+	lua-lpeg/compat.patch

@@ -1,0 +1,26 @@
+diff --git a/meson_options.txt b/meson_options.txt
+index 3f0b7ae5..1bf69b1a 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -23,7 +23,7 @@ option('coretext', type: 'feature', value: 'disabled',
+   description: 'Enable CoreText shaper backend on macOS')
+ 
+ # Common feature options
+-option('tests', type: 'feature', value: 'enabled', yield: true,
++option('tests', type: 'feature', value: 'enabled',
+   description: 'Enable or disable unit tests')
+ option('introspection', type: 'feature', value: 'auto', yield: true,
+   description: 'Generate gobject-introspection bindings (.gir/.typelib files)')
+diff --git a/src/meson.build b/src/meson.build
+index 006e1d56..a1564f1d 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -784,7 +784,7 @@ if get_option('tests').enabled()
+ 
+   env = environment()
+   env.set('srcdir', meson.current_source_dir())
+-  env.set('base_srcdir', meson.source_root())
++  env.set('base_srcdir', meson.project_source_root())
+   env.set('builddir', meson.current_build_dir())
+   env.set('libs', meson.current_build_dir()) # TODO: Merge this with builddir after autotools removal
+   HBSOURCES = []

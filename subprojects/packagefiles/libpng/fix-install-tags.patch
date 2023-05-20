@@ -1,0 +1,29 @@
+diff --git a/meson.build b/meson.build
+index f85a88aa..1caaeb9e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2,7 +2,7 @@ project(
+   'libpng',
+   'c',
+   version: '1.6.39', license: 'libpng',
+-  meson_version: '>=0.50.0',
++  meson_version: '>=0.60.0',
+ )
+ 
+ png_versions = meson.project_version().split('.')
+@@ -127,6 +127,7 @@ configure_file(
+   configuration: cdata,
+   install_dir: get_option('libdir') / 'pkgconfig',
+   install: true,
++  install_tag: 'devel',
+ )
+ 
+ # FIXME: this should be a symlink to libpng16.pc
+@@ -136,6 +137,7 @@ configure_file(
+   configuration: cdata,
+   install_dir: get_option('libdir') / 'pkgconfig',
+   install: true,
++  install_tag: 'devel',
+ )
+ 
+ libpng_dep = declare_dependency(

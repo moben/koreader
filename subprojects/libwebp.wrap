@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/webmproject/libwebp.git
+revision = v1.2.4
+patch_directory = libwebp/overlay
+
+[provide]
+dependency_names = libwebp, libwebpdemux

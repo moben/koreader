@@ -1,0 +1,3 @@
+option('target', type: 'string', value: 'unknown', description: 'Target platform.', yield: true)
+
+option('progs', type: 'array', value: ['fbink'], choices: ['fbdepth', 'fbink'])

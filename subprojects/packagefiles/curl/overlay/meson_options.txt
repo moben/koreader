@@ -1,0 +1,85 @@
+# BASIC OPTIONS.
+
+# Build targets.
+option('tool' , type: 'boolean', value: true)
+option('tests', type: 'feature', value: 'auto')
+
+# Debugging.
+option('curldebug', type: 'boolean', value: false)
+
+# CA.
+option('ca_bundle'  , type: 'string' , value: 'auto')
+option('ca_path'    , type: 'string' , value: 'auto')
+option('ca_fallback', type: 'boolean', value: false)
+
+# Features. {{{
+
+option('brotli'     , type: 'feature', value: 'auto')
+option('ipv6'       , type: 'feature', value: 'auto')
+option('unixsockets', type: 'feature', value: 'auto')
+option('zlib'       , type: 'feature', value: 'auto')
+option('zstd'       , type: 'feature', value: 'auto')
+
+# DNS.
+option('asynchdns', type: 'combo', choices: ['auto', 'threaded', 'disabled', 'ares'])
+
+# IDN.
+option('libidn2', type: 'feature', value: 'auto')
+option('winidn' , type: 'feature', value: 'disabled')
+
+# SSL.
+option('ssl'    , type: 'feature', value: 'auto')
+option('tls_srp', type: 'feature', value: 'auto')
+option('openssl', type: 'feature', value: 'auto')
+
+# }}}
+
+# Protocols. {{{
+
+option('ldap' , type: 'feature', value: 'auto')
+option('ldaps', type: 'feature', value: 'auto')
+option('smb'  , type: 'feature', value: 'auto')
+
+# SSH.
+option('ssh', type: 'combo', choices: ['disabled', 'auto', 'libssh2', 'libssh'])
+
+# }}}
+
+# ADVANCED OPTIONS.
+#
+# Note: tweaking some of those can break the testsuite!
+
+# Features.
+option('features', type: 'array', choices: [
+  'alt_svc',
+  'cookies',
+  'crypto_auth',
+  'getoptions',
+  'http_auth',
+  'hsts',
+  'libcurl_option',
+  'mime',
+  'netrc',
+  'parsedate',
+  'progress_meter',
+  'proxy',
+  'verbose_strings',
+  ])
+
+# Protocols.
+option('protocols', type: 'array', choices: [
+  'dict',
+  'file',
+  'ftp',
+  'gopher',
+  'imap',
+  'http',
+  'mqtt',
+  'pop3',
+  'rtsp',
+  'smtp',
+  'telnet',
+  'tftp',
+  ])
+
+# vim: foldmethod=marker foldlevel=0

@@ -1,0 +1,6 @@
+[wrap-file]
+directory = luasystem-0.2.1
+source_url = https://github.com/o-lim/luasystem/archive/v0.2.1.tar.gz
+source_filename = v0.2.1.tar.gz
+source_hash = 0b83f68e9edbba92bef11ec0ccf1e5bb779a7337653f7bb77e0240c8e85c0b94
+patch_directory = luasystem/overlay

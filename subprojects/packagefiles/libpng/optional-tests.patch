@@ -1,0 +1,21 @@
+diff --git a/meson.build b/meson.build
+index 1caaeb9e..5c094262 100644
+--- a/meson.build
++++ b/meson.build
+@@ -149,5 +149,7 @@ libpng_dep = declare_dependency(
+ # dependency(..., fallback ['libpng': 'png_dep'])
+ png_dep = libpng_dep
+ 
+-png_test = executable('pngtest', 'pngtest.c', dependencies: libpng_dep)
+-test('pngtest', png_test, args: files('pngtest.png'))
++if get_option('tests').allowed()
++  png_test = executable('pngtest', 'pngtest.c', dependencies: libpng_dep)
++  test('pngtest', png_test, args: files('pngtest.png'))
++endif
+diff --git a/meson_options.txt b/meson_options.txt
+new file mode 100644
+index 00000000..0bdfbbe9
+--- /dev/null
++++ b/meson_options.txt
+@@ -0,0 +1 @@
++option('tests', type: 'feature', value: 'auto')

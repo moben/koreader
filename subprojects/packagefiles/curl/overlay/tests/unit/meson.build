@@ -1,0 +1,68 @@
+unit_targets = []
+
+foreach _name, _spec : {
+  'unit1300': {},
+  'unit1302': {},
+  'unit1303': {},
+  'unit1304': {},
+  'unit1305': {},
+  'unit1307': {},
+  'unit1308': {},
+  'unit1309': {},
+  'unit1323': {},
+  'unit1330': {},
+  'unit1394': {
+    'deps': curltool_dep,
+  },
+  'unit1395': {},
+  'unit1396': {},
+  'unit1397': {},
+  'unit1398': {},
+  'unit1399': {},
+  'unit1600': {},
+  'unit1601': {},
+  'unit1602': {},
+  'unit1603': {},
+  'unit1604': {},
+  'unit1605': {},
+  'unit1606': {},
+  'unit1607': {},
+  'unit1608': {},
+  'unit1609': {},
+  'unit1610': {},
+  'unit1611': {},
+  'unit1612': {},
+  'unit1614': {},
+  'unit1620': {},
+  'unit1621': {
+    'deps': curltool_dep,
+  },
+  'unit1650': {},
+  'unit1651': {},
+  'unit1652': {},
+  'unit1653': {},
+  'unit1654': {},
+  'unit1655': {},
+  'unit1660': {},
+  'unit1661': {},
+  'unit2600': {},
+  'unit3200': {},
+}
+  unit_targets += executable(
+    _name,
+    [
+      _name + '.c',
+      '../libtest/first.c',
+    ],
+    c_args: [
+      '-DBUILDING_LIBCURL',
+      '-DCURL_STATICLIB',
+      '-DUNITTESTS',
+    ],
+    dependencies: _spec.get('deps', curlu_dep),
+    include_directories: include_directories(
+      '../../src',
+      '../libtest',
+    ),
+  )
+endforeach

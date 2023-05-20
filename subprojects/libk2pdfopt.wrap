@@ -1,0 +1,14 @@
+[wrap-git]
+url = https://github.com/koreader/libk2pdfopt.git
+revision = 6f479e7d1df48df491ff2398388c562b7cd5bf30
+depth = 1
+patch_directory = libk2pdfopt/overlay
+diff_files = 
+	libk2pdfopt/less-fugly.patch,
+	libk2pdfopt/willus_config.patch,
+	libk2pdfopt/fix-memory-leak.patch,
+	libk2pdfopt/android.patch,
+	libk2pdfopt/visibility.patch
+
+[provide]
+dependency_names = k2pdfopt

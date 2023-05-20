@@ -1,0 +1,10 @@
+[wrap-git]
+url = https://github.com/adah1972/libunibreak.git
+revision = libunibreak_5_1
+depth = 1
+patch_directory = libunibreak/overlay
+diff_files = 
+	libunibreak/add-lb-get-char-class.patch
+
+[provide]
+dependency_names = libunibreak

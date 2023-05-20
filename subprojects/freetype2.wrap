@@ -1,0 +1,10 @@
+[wrap-git]
+url = https://github.com/freetype/freetype.git
+revision = VER-2-13-0
+depth = 1
+diff_files = 
+	freetype2/fix-install-tags.patch
+
+[provide]
+freetype2 = freetype_dep
+freetype = freetype_dep

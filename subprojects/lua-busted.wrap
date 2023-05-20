@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/lunarmodules/busted.git
+revision = a6fb3062bc65ba91aa2097e1882714bbbba85d76
+depth = 1
+patch_directory = lua-busted/overlay

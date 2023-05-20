@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://framagit.org/fperrad/lua-Spore.git
+revision = 0.3.3
+depth = 1
+patch_directory = lua-spore/overlay

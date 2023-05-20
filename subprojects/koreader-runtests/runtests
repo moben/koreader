@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+kodir="$(cd "$(dirname "$0")" && pwd -P)"
+
+find -L spec -name '*.sdr' -print0 | xargs -0 rm -rf
+
+if [ $# -eq 0 ]; then
+    set -- '--run=all'
+else
+    case "$1" in
+        -*) ;;
+        *)
+            suite="$1"
+            shift
+            set -- "--run=${suite}" "$@"
+            ;;
+    esac
+fi
+set -- ./luajit -e 'require "busted.runner" {standalone = false}' /dev/null '--exclude-tags=notest' '--sort-files' "$@"
+
+# Don't fail the testsuite on ASAN detected leaks.
+set -- env LSAN_OPTIONS="${LSAN_OPTIONS:-exitcode=0}" "$@"
+
+cd "${kodir}" && exec "$@"
+
+# vim: sw=4

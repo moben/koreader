@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/tesseract-ocr/tesseract.git
+revision = 60176fc5ae5e7f6bdef60c926a4b5ea03de2bfa7
+depth = 1
+patch_directory = tesseract/overlay
+diff_files = 
+	tesseract/reduce-size.patch

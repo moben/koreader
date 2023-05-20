@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/lunarmodules/say.git
+revision = v1.4.1
+depth = 1
+patch_directory = lua-say/overlay

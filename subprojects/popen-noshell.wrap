@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/famzah/popen-noshell.git
+revision = e715396a4951ee91c40a98d2824a130f158268bb
+depth = 1
+patch_directory = popen-noshell/overlay
+
+[provide]
+dependency_names = libpopen_noshell

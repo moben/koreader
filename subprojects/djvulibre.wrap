@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://gitlab.com/koreader/djvulibre.git
+revision = 6a1e5ba1c9ef81c205a4b270c3f121a1e106f4fc
+depth = 1
+patch_directory = djvulibre/overlay
+diff_files = 
+	djvulibre/no-locale-mangling.patch,
+	djvulibre/android.patch

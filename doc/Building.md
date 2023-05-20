@@ -11,6 +11,19 @@ You can skip most of the following instructions if desired, and use our premade 
 
 ## Prerequisites
 
+FIXME
+
+gcc/g++ or clang
+git
+make
+meson
+ninja
+p7zip
+patch
+pkg-config
+wget
+zip
+
 To get and compile the source you must have `patch`, `wget`, `unzip`, `git`,
 `cmake` and `luarocks` installed, as well as a version of `autoconf`
 greater than 2.64. You also need `nasm`, `ragel`, and of course a compiler like `gcc`

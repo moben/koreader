@@ -1,0 +1,43 @@
+diff --git a/meson.build b/meson.build
+index 8be4d355..e68b14f3 100644
+--- a/meson.build
++++ b/meson.build
+@@ -169,7 +169,7 @@ jpeg = library('jpeg', sources,
+   install: true,
+ )
+ 
+-pkg.generate(jpeg, name: 'libjpeg')
++pkg.generate(jpeg, description: 'A SIMD-accelerated JPEG codec that provides the libjpeg API', name: 'libjpeg')
+ 
+ jpeg_dep = declare_dependency(
+   include_directories: incdir,
+@@ -177,3 +177,29 @@ jpeg_dep = declare_dependency(
+ )
+ 
+ meson.override_dependency('libjpeg', jpeg_dep)
++
++install_headers('turbojpeg.h')
++
++turbojpeg = library(
++  'turbojpeg',
++  'turbojpeg.c',
++  'transupp.c',
++  'jdatadst-tj.c',
++  'jdatasrc-tj.c',
++  'rdbmp.c',
++  'rdppm.c',
++  'wrbmp.c',
++  'wrppm.c',
++  c_args: ['-DBMP_SUPPORTED', '-DPPM_SUPPORTED'],
++  install: true,
++  link_with: [simd, jpeg],
++)
++
++pkg.generate(turbojpeg, description: 'A SIMD-accelerated JPEG codec that provides the TurboJPEG API', name: 'libturbojpeg')
++
++turbojpeg_dep = declare_dependency(
++  include_directories: incdir,
++  link_with: turbojpeg
++)
++
++meson.override_dependency('libturbojpeg', turbojpeg_dep)

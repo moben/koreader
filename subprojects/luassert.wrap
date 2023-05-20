@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/lunarmodules/luassert.git
+revision = v1.9.0
+depth = 1
+patch_directory = luassert/overlay

@@ -1,0 +1,40 @@
+diff --git a/include/meson.build b/include/meson.build
+index 4d0ba0ca..e7636853 100644
+--- a/include/meson.build
++++ b/include/meson.build
+@@ -6,6 +6,13 @@ c_sources += configure_file(
+     configuration: cdata
+ )
+ 
++c_sources += configure_file(
++    input: 'SDL_revision.h.cmake',
++    output: 'SDL_revision.h',
++    format: 'cmake@',
++    configuration: cdata
++)
++
+ headers = [
+     'SDL.h',
+     'SDL_assert.h',
+@@ -54,7 +61,6 @@ headers = [
+     'SDL_quit.h',
+     'SDL_rect.h',
+     'SDL_render.h',
+-    'SDL_revision.h',
+     'SDL_rwops.h',
+     'SDL_scancode.h',
+     'SDL_sensor.h',
+diff --git a/meson.build b/meson.build
+index 68eb17b2..09bcd820 100644
+--- a/meson.build
++++ b/meson.build
+@@ -195,6 +195,9 @@ gl_deps = [
+ 
+ cdata = configuration_data()
+ 
++cdata.set('SDL_REVISION', 'SDL-release-' + meson.project_version())
++cdata.set('SDL_VENDOR_INFO', 'Koreader')
++
+ cdata.set10('SDL_DEFAULT_ASSERT_LEVEL_CONFIGURED', true)
+ if get_option('assertions') == 'auto'
+     # Do nada

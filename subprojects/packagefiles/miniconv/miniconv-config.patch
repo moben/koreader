@@ -1,0 +1,13 @@
+diff --git a/miniconv.h b/miniconv.h
+index 83a7c35c..d0373d57 100644
+--- a/miniconv.h
++++ b/miniconv.h
+@@ -8,7 +8,7 @@
+ #ifndef MINICONV_MINICONV_H
+ #define MINICONV_MINICONV_H
+ 
+-#include "config.h"
++#include "miniconv_config.h"
+ 
+ #define MINICONV_VERSION 0x103
+ 

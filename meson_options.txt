@@ -1,0 +1,13 @@
+option('ffi-cdecl', type: 'boolean', value: false)
+option('install_symlinks', type: 'boolean', value: false)
+option('launcher', type: 'combo', choices: ['default', 'luajit-launcher', 'macos', 'remarkable'])
+option('platform_executables', type: 'array')
+option('static_if_amalgam', type: 'combo', choices: ['shared', 'static'])
+option('subprojects', type: 'array')
+option('target', type: 'string', value: 'emulator')
+option('tests', type: 'boolean', value: false)
+
+# Libraries
+option('blitbuffer', type: 'boolean', value: false)
+option('koreader_input', type: 'boolean', value: false)
+option('sdl', type: 'boolean', value: false)

@@ -1,0 +1,6 @@
+[wrap-file]
+directory = argparse-0.7.1
+source_url = https://github.com/luarocks/argparse/archive/0.7.1.zip
+source_filename = 0.7.1.zip
+source_hash = 009f27e874f1a873de41dd0d2878b240bcd9eb7f9e6c3b0ed6e3fed1fd2f6141
+patch_directory = lua-argparse/overlay

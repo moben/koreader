@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/sammycage/lunasvg.git
+revision = f924651b85cac47dbe15f51a4aa320461fc1d07b
+depth = 1
+patch_directory = lunasvg/overlay
+diff_files = 
+	lunasvg/extended.patch

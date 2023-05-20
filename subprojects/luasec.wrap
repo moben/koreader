@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/brunoos/luasec.git
+revision = v1.3.1
+depth = 1
+patch_directory = luasec/overlay
+diff_files = 
+	luasec/visibility.patch

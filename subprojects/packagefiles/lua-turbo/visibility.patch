@@ -1,0 +1,19 @@
+diff --git a/deps/turbo_ffi_wrap.c b/deps/turbo_ffi_wrap.c
+index 2557fe97..c842c736 100644
+--- a/deps/turbo_ffi_wrap.c
++++ b/deps/turbo_ffi_wrap.c
+@@ -49,6 +49,8 @@ SOFTWARE."			*/
+     (((uint64_t) (val) & (uint64_t) 0x00ff000000000000) >> 40) | \
+     (((uint64_t) (val) & (uint64_t) 0xff00000000000000) >> 56)))
+ 
++#pragma GCC visibility push(default)
++
+ #ifndef TURBO_NO_SSL
+ 
+ #pragma GCC diagnostic push 
+@@ -342,3 +344,5 @@ uint64_t turbo_bswap_u64(uint64_t swap)
+     swapped = ENDIAN_SWAP_U64(swap);
+     return swapped;
+ }
++
++#pragma GCC visibility pop

@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://git.colberg.org/gcc-lua-cdecl
+revision = d8e4a631841d39c50f193b6f39d86fc237467654
+patch_directory = gcc-lua-cdecl/overlay
+diff_files = 
+	gcc-lua-cdecl/gcc-lua-cdecl-do-not-mangle-c99-types.patch

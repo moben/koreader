@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/keplerproject/luacov.git
+revision = v0.15.0
+depth = 1
+patch_directory = luacov/overlay
+
+[provide]
+dependency_names = luacov

@@ -1,0 +1,10 @@
+[wrap-git]
+url = https://github.com/fribidi/fribidi.git
+revision = v1.0.12
+depth = 1
+diff_files = 
+	fribidi/fix-install-tags.patch,
+	fribidi/no-unnecessary-lto.patch
+
+[provide]
+fribidi = libfribidi_dep

@@ -1,0 +1,11 @@
+[wrap-git]
+url = https://github.com/kornelski/7z.git
+revision = a6e2c7e401a3e5976e8522de518a169b0d8a7fac
+depth = 1
+patch_directory = 7z/overlay
+diff_files = 
+	7z/zstd-support.patch,
+	7z/visibility.patch
+
+[provide]
+dependency_names = lib7z

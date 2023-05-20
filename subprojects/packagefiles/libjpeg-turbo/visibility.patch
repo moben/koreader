@@ -1,0 +1,68 @@
+diff --git a/jmorecfg.h b/jmorecfg.h
+index b33a9919..7ab22ff5 100644
+--- a/jmorecfg.h
++++ b/jmorecfg.h
+@@ -171,7 +171,7 @@ typedef unsigned int JDIMENSION;
+ /* a function referenced thru EXTERNs: */
+ #define GLOBAL(type)            type
+ /* a reference to a GLOBAL function: */
+-#define EXTERN(type)            extern type
++#define EXTERN(type)            extern __attribute__ ((visibility("default"))) type
+ 
+ 
+ /* Originally, this macro was used as a way of defining function prototypes
+diff --git a/meson.build b/meson.build
+index e68b14f3..b1c558f8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -130,7 +130,7 @@ incdir = include_directories('.')
+ subdir('simd')
+ cdata.set('WITH_SIMD', have_simd)
+ if not have_simd
+-  simd = static_library('simd', 'jsimd_none.c')
++  simd = static_library('simd', 'jsimd_none.c', gnu_symbol_visibility: 'hidden')
+ endif
+ 
+ jconfig_h_in = host_system == 'windows' ? 'win/jconfig.h.in' : 'jconfig.h.in'
+@@ -164,6 +164,7 @@ sources = [
+ 
+ jpeg = library('jpeg', sources,
+   link_with: simd,
++  gnu_symbol_visibility: 'hidden',
+   soversion: so_version,
+   vs_module_defs: vs_defs,
+   install: true,
+@@ -191,6 +192,7 @@ turbojpeg = library(
+   'wrbmp.c',
+   'wrppm.c',
+   c_args: ['-DBMP_SUPPORTED', '-DPPM_SUPPORTED'],
++  gnu_symbol_visibility: 'hidden',
+   install: true,
+   link_with: [simd, jpeg],
+ )
+diff --git a/simd/meson.build b/simd/meson.build
+index 69467f2b..0561c325 100644
+--- a/simd/meson.build
++++ b/simd/meson.build
+@@ -84,7 +84,7 @@ if host_cpu in ['x86', 'x86_64']
+ 
+   have_simd = true
+   simd = static_library('simd', dir / 'jsimd.c',
+-    simd_src, include_directories: incdir)
++    simd_src, gnu_symbol_visibility: 'hidden', include_directories: incdir)
+ elif simd_opt.enabled()
+   error('SIMD enabled, but CPU family not supported')
+ endif
+diff --git a/turbojpeg.h b/turbojpeg.h
+index 1f8756a6..3aac80d8 100644
+--- a/turbojpeg.h
++++ b/turbojpeg.h
+@@ -33,7 +33,7 @@
+ #if defined(_WIN32) && defined(DLLDEFINE)
+ #define DLLEXPORT  __declspec(dllexport)
+ #else
+-#define DLLEXPORT
++#define DLLEXPORT  __attribute__ ((visibility("default")))
+ #endif
+ #define DLLCALL
+ 

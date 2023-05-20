@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/koreader/ffi-cdecl.git
+revision = 0cb4345649dabe3f1a1b16a8d7d2cb503275efd2
+depth = 1
+patch_directory = ffi-cdecl/overlay

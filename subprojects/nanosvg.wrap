@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/memononen/nanosvg.git
+revision = 9da543e8329fdd81b64eb48742d8ccb09377aed1
+depth = 1
+patch_directory = nanosvg/overlay

@@ -1,0 +1,10 @@
+[wrap-git]
+url = https://github.com/mkj/dropbear.git
+revision = DROPBEAR_2022.83
+depth = 1
+patch_directory = dropbear/overlay
+diff_files = 
+	dropbear/pubkey-hack.patch,
+	dropbear/nochdir-hack.patch,
+	dropbear/options-hack.patch,
+	dropbear/dbscp-path.patch

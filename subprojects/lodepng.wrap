@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/lvandeve/lodepng.git
+revision = c18b949b71f45e78b1f9a28c5d458bce0da505d6
+depth = 1
+patch_directory = lodepng/overlay
+diff_files = 
+	lodepng/visibility.patch

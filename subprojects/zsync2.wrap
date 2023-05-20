@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/NiLuJe/zsync2.git
+revision = e618d18f6a7cbf350cededa17ddfe8f76bdf0b5c
+depth = 1
+patch_directory = zsync2/overlay
+diff_files = 
+	zsync2/fix-static-build.patch

@@ -1,0 +1,31 @@
+diff --git a/meson.build b/meson.build
+index 2856dfa3..33f7fab9 100644
+--- a/meson.build
++++ b/meson.build
+@@ -94,4 +94,6 @@ pkg.generate(
+   extra_cflags: solo_args,
+ )
+ 
+-subdir('test')
++if not get_option('tests').disabled()
++  subdir('test')
++endif
+diff --git a/meson_options.txt b/meson_options.txt
+index 675abec6..461cb47e 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,2 +1,2 @@
+ option('solo', type: 'boolean', value: false, description: 'Build a minimal zlib without file I/O API')
+-option('tests', type : 'feature', value : 'auto', yield : true)
++option('tests', type : 'feature', value : 'auto')
+diff --git a/test/meson.build b/test/meson.build
+index 2ff31d61..cf4f758f 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -1,6 +1,2 @@
+-if get_option('tests').disabled()
+-  sudbdir_done()
+-endif
+-
+ test('example', executable('example', 'example.c', dependencies: zlib_dep))
+ #test('minigzip', executable('minigzip', 'minigzip.c', dependencies: zlib_dep))

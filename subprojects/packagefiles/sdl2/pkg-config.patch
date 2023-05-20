@@ -1,0 +1,24 @@
+diff --git a/include/meson.build b/include/meson.build
+index e7636853..48b2863e 100644
+--- a/include/meson.build
++++ b/include/meson.build
+@@ -100,3 +100,8 @@ foreach header : headers
+         copy : true,
+     )
+ endforeach
++
++install_headers(
++  [c_sources[-headers.length()-2], c_sources[-headers.length()-1]] + headers,
++  subdir: 'SDL2',
++)
+diff --git a/meson.build b/meson.build
+index 09bcd820..edd43301 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1158,3 +1158,6 @@ endif
+ if get_option('test')
+     subdir('test')
+ endif
++
++pkg = import('pkgconfig')
++pkg.generate(sdl2, subdirs: 'SDL2')

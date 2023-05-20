@@ -1,0 +1,13 @@
+diff --git a/include/czmq_prelude.h b/include/czmq_prelude.h
+index 890f743b..9decb86d 100644
+--- a/include/czmq_prelude.h
++++ b/include/czmq_prelude.h
+@@ -268,7 +268,7 @@
+ #   include <sys/un.h>
+ #   include <sys/uio.h>             //  Let CZMQ build with libzmq/3.x
+ #   include <netinet/in.h>          //  Must come before arpa/inet.h
+-#   if (!defined (__UTYPE_ANDROID)) && (!defined (__UTYPE_IBMAIX)) \
++#   if (!defined (__UTYPE_IBMAIX)) \
+     && (!defined (__UTYPE_HPUX))
+ #       include <ifaddrs.h>
+ #   endif

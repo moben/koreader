@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/openssh/openssh-portable.git
+revision = V_8_6_P1
+depth = 1
+patch_directory = openssh-portable/overlay

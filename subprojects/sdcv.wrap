@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/Dushistov/sdcv.git
+revision = 6e36e7730caf07b6cd0bfa265cdf9b5e31e7acad
+depth = 1
+patch_directory = sdcv/overlay
+diff_files = 
+	sdcv/locale-hack.patch,
+	sdcv/no-unknown-dict-warning.patch

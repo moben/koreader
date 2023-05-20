@@ -1,0 +1,13 @@
+diff --git a/fbink_internal.h b/fbink_internal.h
+index b36098e7..77b7af9c 100644
+--- a/fbink_internal.h
++++ b/fbink_internal.h
+@@ -188,7 +188,7 @@
+ // We're going to need a few more things for OpenType support...
+ #ifdef FBINK_WITH_OPENTYPE
+ // We need libunibreak for word breaking
+-#	include "libunibreak/src/linebreak.h"
++#	include "linebreak.h"
+ #endif
+ 
+ // NOTE: We always neeed one of those, because we rely on mxcfb_rect in a number of places

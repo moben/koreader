@@ -1,0 +1,2 @@
+option('gcc_plugins_dir', type: 'string')
+option('plugins_dir', type: 'string')

@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://gitlab.com/koreader/giflib.git
+revision = 5.1.4
+depth = 1
+patch_directory = giflib/overlay
+
+[provide]
+dependency_names = gif

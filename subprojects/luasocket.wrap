@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/lunarmodules/luasocket.git
+revision = 8c2ff7217e2a205eb107a6f48b04ff1b2b3090a1
+depth = 1
+patch_directory = luasocket/overlay
+diff_files = 
+	luasocket/namespace.patch
