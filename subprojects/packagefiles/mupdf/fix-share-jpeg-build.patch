@@ -1,5 +1,5 @@
 diff --git a/source/fitz/jmemcust.c b/source/fitz/jmemcust.c
-index d5318026..9e2e14c6 100644
+index d0cb3048..5af08ae7 100644
 --- a/source/fitz/jmemcust.c
 +++ b/source/fitz/jmemcust.c
 @@ -14,6 +14,8 @@
