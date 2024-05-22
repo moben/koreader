@@ -195,9 +195,9 @@ function FontList:getFontList()
     end
 
     -- Update the on-disk cache if necessary
-    if mark.cache_dirty then
-        cache:save(self.fontinfo)
-    end
+    -- if mark.cache_dirty then
+    --     cache:save(self.fontinfo)
+    -- end
 
     local names = self.fontnames
     for _, coll in pairs(self.fontinfo) do
