@@ -57,6 +57,8 @@ pkgs.mkShell rec {
     xorg.libXrandr
   ];
   nativeBuildInputs = with pkgs; [
+    gdb
+    rr
     autoconf
     automake
     gettext
