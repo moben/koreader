@@ -1,12 +1,14 @@
 {
-  nixpkgsSource ? (builtins.fetchTarball {
-    name = "nixpkgs";
-    url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
-    sha256 = "sha256:1kkzvi3vc14k6sp829hc73228yixjl4m4sp37scjynx4shmhbpb1";
-  }),
-  pkgs ? import nixpkgsSource {
-    config.allowUnfree = true;
-  },
+  pkgs ?
+    import
+      (builtins.fetchTarball {
+        name = "nixpkgs";
+        url = "https://github.com/NixOS/nixpkgs/archive/nixpkgs-unstable.tar.gz";
+        sha256 = "sha256:1kkzvi3vc14k6sp829hc73228yixjl4m4sp37scjynx4shmhbpb1";
+      })
+      {
+        config.allowUnfree = true;
+      },
 
 }:
 
@@ -83,7 +85,7 @@ pkgs.mkShell rec {
   # ANDROID_NDK_ROOT = "${ANDROID_SDK_ROOT}/ndk-bundle";
 
   # GRADLE_OPTS = "-Dorg.gradle.project.android.aapt2FromMavenOverride=${ANDROID_SDK_ROOT}/build-tools/${buildToolsVersion}/aapt2";
-  CC_FOR_BUILD="gcc";
+  CC_FOR_BUILD = "gcc";
 
   # Use the same cmakeVersion here
   shellHook = ''
