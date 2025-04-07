@@ -996,15 +996,13 @@ ol.references > li > .mw-cite-backlink { display: none; }
 Show footnotes with classic classnames at the bottom of pages.
 This tweak can be duplicated as a user style tweak when books contain footnotes wrapped with other class names.]]),
             css = [[
-.footnote, .footnotes, .fn,
-.note, .note1, .note2, .note3,
-.ntb, .ntb-txt, .ntb-txt-j,
-.fnote, .fnote1,
-.duokan-footnote-item, /* Common chinese books */
-.przypis, .przypis1, /* Polish footnotes */
-.voetnoten /* Dutch footnotes */
-{
+* {
+    -cr-only-if: inside-inpage-footnote;
     -cr-hint: footnote-inpage;
+}
+* {
+    -cr-hint: late;
+    -cr-only-if: inside-inpage-footnote;
     margin: 0 !important;
 }
             ]],
@@ -1018,13 +1016,13 @@ This tweak can be duplicated as a user style tweak when books contain footnotes 
 Show footnotes with classic classnames at the bottom of pages.
 This tweak can be duplicated as a user style tweak when books contain footnotes wrapped with other class names.]]),
             css = [[
-.footnote, .footnotes, .fn,
-.note, .note1, .note2, .note3,
-.ntb, .ntb-txt, .ntb-txt-j,
-.przypis, .przypis1, /* Polish footnotes */
-.voetnoten /* Dutch footnotes */
-{
+* {
+    -cr-only-if: inside-inpage-footnote;
     -cr-hint: footnote-inpage;
+}
+* {
+    -cr-hint: late;
+    -cr-only-if: inside-inpage-footnote;
     margin: 0 !important;
     font-size: 0.8rem !important;
 }
@@ -1055,7 +1053,7 @@ This tweak can be duplicated as a user style tweak when books contain footnotes 
                     css = T([[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote -inline;
+    -cr-only-if: inpage-footnote inside-inpage-footnote -inline;
         font-size: %1rem !important;
 }
                     ]], rem),
@@ -1071,7 +1069,7 @@ This tweak can be duplicated as a user style tweak when books contain footnotes 
                 css = [[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote;
+    -cr-only-if: inpage-footnote inside-inpage-footnote;
         text-indent: 0 !important;
 }
                 ]],
@@ -1082,7 +1080,7 @@ This tweak can be duplicated as a user style tweak when books contain footnotes 
                 css = [[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote;
+    -cr-only-if: inpage-footnote inside-inpage-footnote;
         text-align: justify !important;
 }
                 ]],
@@ -1095,7 +1093,7 @@ Remove block margin and padding inside inpage footnotes.]]),
                 css = [[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote -inline;
+    -cr-only-if: inpage-footnote inside-inpage-footnote -inline;
         margin: 0 !important;
         padding: 0 !important;
 }
@@ -1109,7 +1107,7 @@ Remove inline margin and padding inside inpage footnotes.]]),
                 css = [[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote inline;
+    -cr-only-if: inpage-footnote inside-inpage-footnote inline;
         margin: 0 !important;
         padding: 0 !important;
 }
@@ -1127,12 +1125,12 @@ This will break any complex footnote containing quotes or lists.]]),
                 css = [[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote -inpage-footnote -inline;
+    -cr-only-if: inpage-footnote inside-inpage-footnote -inpage-footnote -inline;
         display: inline !important;
 }
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote;
+    -cr-only-if: inpage-footnote inside-inpage-footnote;
         list-style-position: inside;
 }
                 ]],
@@ -1146,7 +1144,7 @@ If the footnote text uses variable or absolute font sizes, line height or vertic
                 css = [[
 *, autoBoxing {
     -cr-hint: late;
-    -cr-only-if: inside-inpage-footnote -inpage-footnote;
+    -cr-only-if: inpage-footnote inside-inpage-footnote -inpage-footnote;
         font-size: inherit !important;
         line-height: inherit !important;
         vertical-align: inherit !important;
