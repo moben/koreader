@@ -159,7 +159,8 @@ Version:updateVersionLog(Device.model)
 
 -- Handle one time migration stuff (settings, deprecation, ...) in case of an upgrade...
 do
-    dofile("frontend/ui/data/onetime_migration.lua")
+    local OnetimeMigration = require("ui/data/onetime_migration")
+    OnetimeMigration:migrateSettings(G_reader_settings)
 end
 
 -- UI mirroring for RTL languages, and text shaping configuration

@@ -58,7 +58,7 @@ local ReaderView = require("apps/reader/modules/readerview")
 local ReaderWikipedia = require("apps/reader/modules/readerwikipedia")
 local ReaderZooming = require("apps/reader/modules/readerzooming")
 local Screenshoter = require("ui/widget/screenshoter")
-local SettingsMigration = require("ui/data/settings_migration")
+local OnetimeMigration = require("ui/data/onetime_migration")
 local UIManager = require("ui/uimanager")
 local ffiUtil  = require("ffi/util")
 local filemanagerutil = require("apps/filemanager/filemanagerutil")
@@ -127,7 +127,7 @@ function ReaderUI:init()
     self.doc_settings = DocSettings:open(self.document.file)
     self.document.is_new = self.doc_settings:readSetting("doc_props") == nil
     -- Handle local settings migration
-    SettingsMigration:migrateSettings(self.doc_settings)
+    OnetimeMigration:migrateSettings(self.doc_settings)
 
     self:registerKeyEvents()
 
